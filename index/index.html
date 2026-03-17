@@ -4,11 +4,53 @@
     <meta charset="UTF-8">
     <title>Mini Blog</title>
 </head>
+
 <body onload="Bulletin_Board()">
+
+<h2>Crear Post</h2>
+
+<form onsubmit="crearPost(event)">
+    <input type="text" id="title" placeholder="Título" required><br><br>
+    <textarea id="body" placeholder="Contenido" required></textarea><br><br>
+    <button type="submit">publicar</button>
+</form>
+
+<hr>
 
 <div id="test"></div>
 
 <script>
+
+    function crearPost(event) {
+        event.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const body = document.getElementById('body').value;
+
+        fetch('https://dummyjson.com/posts/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: title,
+                body: body,
+                userId: 1
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                alert("Post creado!");
+
+                document.getElementById('title').value = "";
+                document.getElementById('body').value = "";
+
+                Bulletin_Board();
+            })
+            .catch(error => {
+                alert("Error al crear post");
+                console.error(error);
+            });
+    }
+
     function Bulletin_Board() {
         const container = document.getElementById('test');
 
@@ -28,23 +70,24 @@
 
                 posts.forEach(post => {
                     html += `
-                        <div style="border:1px solid #ccc; margin:10px; padding:10px;">
-                            <h3>${post.title}</h3>
-                            <p>${post.body}</p>
-                        </div>
-                    `;
+                    <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+                        <h3>${post.title}</h3>
+                        <p>${post.body}</p>
+                    </div>
+                `;
                 });
 
                 container.innerHTML = html;
             })
             .catch(error => {
                 container.innerHTML = `
-                    <p>Error al cargar</p>
-                    <button onclick="Bulletin_Board()">reintentar?</button>
-                `;
+                <p>Error al cargar</p>
+                <button onclick="Bulletin_Board()">reintentar?</button>
+            `;
                 console.error(error);
             });
     }
+
 </script>
 
 </body>
