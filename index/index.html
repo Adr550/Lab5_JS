@@ -38,7 +38,7 @@
         })
             .then(res => res.json())
             .then(data => {
-                alert("Post creado!");
+                alert("post creado");
 
                 document.getElementById('title').value = "";
                 document.getElementById('body').value = "";
@@ -46,7 +46,7 @@
                 Bulletin_Board();
             })
             .catch(error => {
-                alert("Error al crear post");
+                alert("error al crear post");
                 console.error(error);
             });
     }
