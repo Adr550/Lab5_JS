@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Blog</title>
+</head>
+<body onload="Bulletin_Board()">
+
+<div id="test"></div>
+
+<script>
+    function Bulletin_Board() {
+        const container = document.getElementById('test');
+
+        container.innerHTML = "<p>cargando</p>";
+
+        fetch('https://dummyjson.com/posts')
+            .then(res => res.json())
+            .then(data => {
+                const posts = data.posts;
+
+                if (posts.length === 0) {
+                    container.innerHTML = "<p>no hay posts</p>";
+                    return;
+                }
+
+                let html = "";
+
+                posts.forEach(post => {
+                    html += `
+                        <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+                            <h3>${post.title}</h3>
+                            <p>${post.body}</p>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            })
+            .catch(error => {
+                container.innerHTML = `
+                    <p>Error al cargar</p>
+                    <button onclick="Bulletin_Board()">reintentar?</button>
+                `;
+                console.error(error);
+            });
+    }
+</script>
+
+</body>
+</html>
